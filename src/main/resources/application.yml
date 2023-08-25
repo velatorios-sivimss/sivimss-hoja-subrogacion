@@ -4,17 +4,13 @@ server:
     contextPath: /${spring.application.name}/v1
 spring: 
   application:
-    name: mssivimss-arquetipo
+    name: mssivimss-hoja-subrogacion
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
-      
-
-      
+         
   main:
     allow-circular-references: true
-    
-  
         
   servlet:
     multipart:
@@ -26,7 +22,6 @@ logging:
     root: info
     org.springframework.web: info
     org.hibernate: error
-
 
 endpoints:
    mod-catalogos: ${msit_CATALOGOS}
