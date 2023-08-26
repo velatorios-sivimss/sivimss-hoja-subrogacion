@@ -40,9 +40,14 @@ public class HojaSubrogacionController {
 	
 	@PostMapping("/consultar/folio-orden")
 	public CompletableFuture<Object>consultarFolioOrden(@RequestBody DatosRequest request, Authentication authentication) throws IOException, SQLException{
-		Response<?>response=null;
-		return CompletableFuture
-				.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
+		Response<?>response = hojaSubrogacionService.consultarFolioOrden(request, authentication);
+		return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
+	}
+	
+	@PostMapping("/consultar/proveedor")
+	public CompletableFuture<Object>consultarProveedor(@RequestBody DatosRequest request, Authentication authentication) throws IOException, SQLException{
+		Response<?>response = hojaSubrogacionService.consultarProveedor(request, authentication);
+		return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
 	}
 	
 	

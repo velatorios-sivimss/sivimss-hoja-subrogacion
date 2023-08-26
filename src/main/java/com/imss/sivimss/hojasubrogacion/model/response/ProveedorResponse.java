@@ -1,4 +1,4 @@
-package com.imss.sivimss.hojasubrogacion.model.request;
+package com.imss.sivimss.hojasubrogacion.model.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -8,11 +8,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FolioRequest {
+public class ProveedorResponse {
 
-	private Integer idVelatorio;
-	
-	private String folioOrdenServicio;
-	
+	private String folioProveedor;
 	private String nombreProveedor;
 }

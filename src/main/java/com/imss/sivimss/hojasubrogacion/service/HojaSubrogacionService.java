@@ -10,5 +10,6 @@ import com.imss.sivimss.hojasubrogacion.util.Response;
 public interface HojaSubrogacionService {
 	
 	Response<Object>consultarFolioOrden(DatosRequest request, Authentication authentication) throws IOException;
+	Response<Object>consultarProveedor(DatosRequest request, Authentication authentication) throws IOException;
 
 }
