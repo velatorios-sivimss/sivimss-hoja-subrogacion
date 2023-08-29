@@ -95,4 +95,19 @@ public class HojaSubrogacionServiceImpl  implements HojaSubrogacionService {
 		}
 	}
 
+	@Override
+	public Response<?> busquedaFiltros(DatosRequest request, Authentication authentication) throws IOException {
+		return null;
+	}
+
+	@Override
+	public Response<?> generarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException {
+		return null;
+	}
+
+	@Override
+	public Response<?> busquedaServicios(DatosRequest request, Authentication authentication) throws IOException {
+		return null;
+	}
+
 }

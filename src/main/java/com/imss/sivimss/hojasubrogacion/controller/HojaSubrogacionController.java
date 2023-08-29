@@ -2,9 +2,13 @@ package com.imss.sivimss.hojasubrogacion.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +53,34 @@ public class HojaSubrogacionController {
 		Response<?>response = hojaSubrogacionService.consultarProveedor(request, authentication);
 		return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
 	}
-	
+
+	@CircuitBreaker(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@Retry(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@TimeLimiter(name = "msflujo")
+	@PostMapping("buscar-filtros")
+	public CompletableFuture<?> buscarFiltros(@RequestBody DatosRequest request, Authentication authentication) throws IOException, ParseException {
+		Response<?> response = hojaSubrogacionService.busquedaFiltros(request, authentication);
+		return CompletableFuture
+				.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
+	}
+	@CircuitBreaker(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@Retry(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@TimeLimiter(name = "msflujo")
+	@PostMapping("buscar-servicios")
+	public CompletableFuture<?> buscarServicios(@RequestBody DatosRequest request, Authentication authentication) throws IOException, ParseException {
+		Response<?> response = hojaSubrogacionService.busquedaServicios(request, authentication);
+		return CompletableFuture
+				.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
+	}
+	@CircuitBreaker(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@Retry(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@TimeLimiter(name = "msflujo")
+	@PostMapping("generar-hoja-subrogacion")
+	public CompletableFuture<?> buscarPlanSFPAFolio(@RequestBody DatosRequest request, Authentication authentication) throws IOException, ParseException {
+		Response<?> response = hojaSubrogacionService.generarHojaSubrogacion(request, authentication);
+		return CompletableFuture
+				.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
+	}
 	
 	
 	/**
