@@ -57,7 +57,7 @@ public class HojaSubrogacionController {
 	@CircuitBreaker(name = "msflujo", fallbackMethod = "fallbackGenerico")
 	@Retry(name = "msflujo", fallbackMethod = "fallbackGenerico")
 	@TimeLimiter(name = "msflujo")
-	@PostMapping("buscar-filtros")
+	@PostMapping("buscar/filtros")
 	public CompletableFuture<?> buscarFiltros(@RequestBody DatosRequest request, Authentication authentication) throws IOException, ParseException {
 		Response<?> response = hojaSubrogacionService.busquedaFiltros(request, authentication);
 		return CompletableFuture
@@ -66,7 +66,7 @@ public class HojaSubrogacionController {
 	@CircuitBreaker(name = "msflujo", fallbackMethod = "fallbackGenerico")
 	@Retry(name = "msflujo", fallbackMethod = "fallbackGenerico")
 	@TimeLimiter(name = "msflujo")
-	@PostMapping("buscar-servicios")
+	@PostMapping("buscar/servicios")
 	public CompletableFuture<?> buscarServicios(@RequestBody DatosRequest request, Authentication authentication) throws IOException, ParseException {
 		Response<?> response = hojaSubrogacionService.busquedaServicios(request, authentication);
 		return CompletableFuture
@@ -75,8 +75,8 @@ public class HojaSubrogacionController {
 	@CircuitBreaker(name = "msflujo", fallbackMethod = "fallbackGenerico")
 	@Retry(name = "msflujo", fallbackMethod = "fallbackGenerico")
 	@TimeLimiter(name = "msflujo")
-	@PostMapping("generar-hoja-subrogacion")
-	public CompletableFuture<?> buscarPlanSFPAFolio(@RequestBody DatosRequest request, Authentication authentication) throws IOException, ParseException {
+	@PostMapping("generar/pdf")
+	public CompletableFuture<?> generarHojaSubrogacion(@RequestBody DatosRequest request, Authentication authentication) throws IOException, ParseException {
 		Response<?> response = hojaSubrogacionService.generarHojaSubrogacion(request, authentication);
 		return CompletableFuture
 				.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));

@@ -2,11 +2,17 @@ package com.imss.sivimss.hojasubrogacion.service.impl;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import javax.xml.bind.DatatypeConverter;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.imss.sivimss.hojasubrogacion.beans.ConsultaHojaSubrogacion;
+import com.imss.sivimss.hojasubrogacion.model.request.FiltrosRequest;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +50,8 @@ public class HojaSubrogacionServiceImpl  implements HojaSubrogacionService {
 	
 	@Value("${endpoints.mod-catalogos}")
 	private String urlDominio;
+	@Value("${endpoints.ms-reportes}")
+	private String urlReportes;
 
 	@Override
 	public Response<Object> consultarFolioOrden(DatosRequest request, Authentication authentication) throws IOException {
@@ -97,17 +105,29 @@ public class HojaSubrogacionServiceImpl  implements HojaSubrogacionService {
 
 	@Override
 	public Response<?> busquedaFiltros(DatosRequest request, Authentication authentication) throws IOException {
-		return null;
+		Gson json = new Gson();
+		String datosJson = String.valueOf(request.getDatos().get(AppConstantes.DATOS));
+		FiltrosRequest filtros = json.fromJson(datosJson,FiltrosRequest.class);
+		return providerServiceRestTemplate.consumirServicio( new ConsultaHojaSubrogacion().busquedaFiltros(filtros).getDatos()
+		,urlDominio + AppConstantes.CATALOGO_CONSULTA_PAGINADO,authentication);
 	}
 
 	@Override
 	public Response<?> generarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException {
-		return null;
+		JsonObject jsonObj = JsonParser.parseString((String) request.getDatos().get(AppConstantes.DATOS)).getAsJsonObject();
+		String idHojaSr = jsonObj.get("idHojaSubrogacion").getAsString();
+		Map<String, Object> datosReporte = new HashMap<>();
+		datosReporte.put("rutaNombreReporte","reportes/plantilla/ANEXO7_ORDEN_SUBROGACION.jrxml");
+		datosReporte.put("tipoReporte","pdf");
+		datosReporte.put("idHojaSubrogacion",idHojaSr);
+		return providerServiceRestTemplate.consumirServicioReportes(datosReporte, urlReportes, authentication);
 	}
 
 	@Override
 	public Response<?> busquedaServicios(DatosRequest request, Authentication authentication) throws IOException {
-		return null;
+		return providerServiceRestTemplate.consumirServicio( new ConsultaHojaSubrogacion().buscarServicios().getDatos()
+				,urlDominio + AppConstantes.CATALOGO_CONSULTAR,authentication);
 	}
+
 
 }
