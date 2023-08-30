@@ -8,7 +8,28 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
-         
+      
+
+      
+
+  datasource:
+    platform: mariadb
+    driverClassName: org.mariadb.jdbc.Driver
+    url: ${msit_CONNECTION_DB}
+    username: ${msit_USERNAME_DB}
+    password: ${msit_PASSWORD_DB}
+    timeBetweenEvictionRunsMillis: 1000
+    testWhileIdle: true
+    validationQuery: SELECT 1
+    hikari:
+      max-lifetime: ${msit_LIFE_TIME}
+      idle-timeout: ${msit_TIME_OUT}
+      connection-timeout: ${msit_CONNECTION_TIMEOUT}
+      auto-commit: false
+      maximum-pool-size: ${msit_CONNECTION_POOL}
+      minimum-idle: ${msit_CONNECTION_IDLE}
+
+      
   main:
     allow-circular-references: true
         

@@ -81,7 +81,24 @@ public class HojaSubrogacionController {
 		return CompletableFuture
 				.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
 	}
-	
+
+	@CircuitBreaker(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@Retry(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@TimeLimiter(name = "msflujo")
+	@PostMapping("/inserta/hoja-subrogacion")
+	public CompletableFuture<Object>insertaHoja(@RequestBody DatosRequest request, Authentication authentication) throws Exception{
+		Response<Object>response = hojaSubrogacionService.insertaHojaSubrogacion(request, authentication);
+		return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
+	}
+
+	@CircuitBreaker(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@Retry(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@TimeLimiter(name = "msflujo")
+	@PostMapping("/modifica/hoja-subrogacion")
+	public CompletableFuture<Object>modificaHoja(@RequestBody DatosRequest request, Authentication authentication) throws IOException{
+		Response<Object>response = hojaSubrogacionService.modificarHojaSubrogacion(request, authentication);
+		return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
+	}
 	
 	/**
 	 * fallbacks generico
@@ -91,7 +108,7 @@ public class HojaSubrogacionController {
 	 */
 	CompletableFuture<Object> fallbackGenerico(@RequestBody DatosRequest request, Authentication authentication,
 			CallNotPermittedException e) throws IOException {
-		Response<?> response = providerRestTemplate.respuestaProvider(e.getMessage());
+		Response<Object> response = providerRestTemplate.respuestaProvider(e.getMessage());
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),RESILENCIA, CONSULTA,authentication);
 		return CompletableFuture
 				.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
@@ -99,7 +116,7 @@ public class HojaSubrogacionController {
 
 	CompletableFuture<Object> fallbackGenerico(@RequestBody DatosRequest request, Authentication authentication,
 			RuntimeException e) throws IOException {
-		Response<?> response = providerRestTemplate.respuestaProvider(e.getMessage());
+		Response<Object> response = providerRestTemplate.respuestaProvider(e.getMessage());
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),RESILENCIA, CONSULTA,authentication);
 		return CompletableFuture
 				.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
@@ -107,7 +124,7 @@ public class HojaSubrogacionController {
 
 	CompletableFuture<Object> fallbackGenerico(@RequestBody DatosRequest request, Authentication authentication,
 			NumberFormatException e) throws IOException {
-		Response<?> response = providerRestTemplate.respuestaProvider(e.getMessage());
+		Response<Object> response = providerRestTemplate.respuestaProvider(e.getMessage());
 		logUtil.crearArchivoLog(Level.INFO.toString(),this.getClass().getSimpleName(),this.getClass().getPackage().toString(),RESILENCIA, CONSULTA,authentication);
 		return CompletableFuture
 				.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));

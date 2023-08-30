@@ -1,6 +1,10 @@
 package com.imss.sivimss.hojasubrogacion.service.impl;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,25 +22,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.imss.sivimss.hojasubrogacion.beans.HojaSubrogacion;
 import com.imss.sivimss.hojasubrogacion.beans.FolioOrdenServicio;
 import com.imss.sivimss.hojasubrogacion.model.request.FolioRequest;
+import com.imss.sivimss.hojasubrogacion.model.request.HojaSubrogacionRequest;
+import com.imss.sivimss.hojasubrogacion.model.request.UsuarioDto;
 import com.imss.sivimss.hojasubrogacion.model.response.FolioResponse;
 import com.imss.sivimss.hojasubrogacion.model.response.ProveedorResponse;
 import com.imss.sivimss.hojasubrogacion.service.HojaSubrogacionService;
 import com.imss.sivimss.hojasubrogacion.util.AppConstantes;
+import com.imss.sivimss.hojasubrogacion.util.ConstantsMensajes;
+import com.imss.sivimss.hojasubrogacion.util.Database;
 import com.imss.sivimss.hojasubrogacion.util.DatosRequest;
+import com.imss.sivimss.hojasubrogacion.util.ExceptionGenerico;
 import com.imss.sivimss.hojasubrogacion.util.LogUtil;
 import com.imss.sivimss.hojasubrogacion.util.MensajeResponseUtil;
 import com.imss.sivimss.hojasubrogacion.util.ProviderServiceRestTemplate;
 import com.imss.sivimss.hojasubrogacion.util.Response;
 
 @Service
-public class HojaSubrogacionServiceImpl  implements HojaSubrogacionService {
-	
+public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
+
 	private static final Logger log = LoggerFactory.getLogger(HojaSubrogacionServiceImpl.class);
 	
 	@Autowired
@@ -52,6 +63,28 @@ public class HojaSubrogacionServiceImpl  implements HojaSubrogacionService {
 	private String urlDominio;
 	@Value("${endpoints.ms-reportes}")
 	private String urlReportes;
+	
+	@Autowired
+	private Database database;
+	
+	private Connection connection; 
+	private ResultSet rs;	
+	private Statement statement;
+
+
+	private static final String CU037_NOMBRE = "Hoja-Subrogacion: ";
+	private static final String INGRESAR_HOJA_SUBROGACION = "Ingresar Nueva Hoja Subrogacion: " ;
+	private static final String MODIFICAR_HOJA_SUBROGACION = "Modificar Hoja Subrogacion: " ;
+	private static final String FALLO_QUERY = "Fallo al ejecutar el Query  ";
+	
+	private static final String AGREGADO_CORRECTAMENTE = "30"; // Agregado correctamente..
+	private static final String MODIFICADO_CORRECTAMENTE = "18"; // Modificado correctamente.
+	
+	public HojaSubrogacionServiceImpl(ProviderServiceRestTemplate providerServiceRestTemplate, ModelMapper modelMapper, LogUtil logUtil) {
+		this.providerServiceRestTemplate = providerServiceRestTemplate;
+		this.modelMapper=modelMapper;
+		this.logUtil=logUtil;
+	}
 
 	@Override
 	public Response<Object> consultarFolioOrden(DatosRequest request, Authentication authentication) throws IOException {
@@ -129,5 +162,98 @@ public class HojaSubrogacionServiceImpl  implements HojaSubrogacionService {
 				,urlDominio + AppConstantes.CATALOGO_CONSULTAR,authentication);
 	}
 
+	
+	@Override
+	public Response<Object> insertaHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException {
+		Response<Object>response = null;
+		String query = ""; 
+		try { 
+			Gson gson = new Gson();
+			UsuarioDto usuario = gson.fromJson((String) authentication.getPrincipal(), UsuarioDto.class);
+			HojaSubrogacion hojaSubrogacion = new HojaSubrogacion();
+			String datosJson = String.valueOf(request.getDatos().get(AppConstantes.DATOS));
+			HojaSubrogacionRequest hojaSubrogacionRequest = gson.fromJson(datosJson, HojaSubrogacionRequest.class);
+			query = hojaSubrogacion.queryInsertHojaSubrogacion(hojaSubrogacionRequest, usuario.getIdUsuario());
+			logUtil.crearArchivoLog(Level.INFO.toString(), this.getClass().getSimpleName(), this.getClass().getPackage().toString(), "insertaHojaSubrogacion: ", AppConstantes.QUERY, authentication);
+			response = execQueryInsert(query);
+			return MensajeResponseUtil.mensajeConsultaResponseObject(response, AGREGADO_CORRECTAMENTE);
+		
+		} catch (Exception e) {
+			logUtil.crearArchivoLog(Level.WARNING.toString(), CU037_NOMBRE + e.getCause().getMessage() + "- " + this.getClass().getSimpleName(),
+					this.getClass().getPackage().toString(),query, INGRESAR_HOJA_SUBROGACION,
+					authentication);
+	     throw new IOException(AppConstantes.ERROR_GUARDAR, e.getCause());
+		}
+	}
 
+	@Override
+	public Response<Object> modificarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException {
+		Response<Object> response = null;
+		String query = "";
+		try {
+			Gson gson = new Gson();
+			UsuarioDto usuario = gson.fromJson((String) authentication.getPrincipal(), UsuarioDto.class);
+			HojaSubrogacion hojaSubrogacion = new HojaSubrogacion();
+			String datosJson = String.valueOf(request.getDatos().get(AppConstantes.DATOS));
+			HojaSubrogacionRequest hojaSubrogacionRequest = gson.fromJson(datosJson, HojaSubrogacionRequest.class);
+			query = hojaSubrogacion.queryUpdateHojaSubrogacion(hojaSubrogacionRequest, usuario.getIdUsuario());
+			response = execQueryActualiza(query);
+			logUtil.crearArchivoLog(Level.INFO.toString(), this.getClass().getSimpleName(), this.getClass().getPackage().toString(), "modificarHojaSubrogacion: ", AppConstantes.CONSULTA, authentication);
+	        
+			return MensajeResponseUtil.mensajeConsultaResponseObject(response, MODIFICADO_CORRECTAMENTE);
+		
+		} catch (Exception e) {
+			log.error( CU037_NOMBRE + MODIFICAR_HOJA_SUBROGACION + ", {}",query);
+			logUtil.crearArchivoLog(Level.WARNING.toString(), CU037_NOMBRE + e.getCause().getMessage() + "- " + this.getClass().getSimpleName(),
+					this.getClass().getPackage().toString(),query, MODIFICAR_HOJA_SUBROGACION,
+					authentication);
+	     throw new IOException(AppConstantes.ERROR_GUARDAR, e.getCause());
+		}
+	}
+
+	public Response<Object> execQueryInsert(String query) throws SQLException, ExceptionGenerico{
+		try {
+			connection = database.getConnection();
+			connection.setAutoCommit(false);
+			statement = connection.createStatement();
+			statement.execute(query, Statement.RETURN_GENERATED_KEYS);
+			rs = statement.getGeneratedKeys();
+			if (rs.next()) {
+				connection.setAutoCommit(true);
+				return new Response<>(false, HttpStatus.OK.value(), ConstantsMensajes.EXITO.getMensaje(),
+						rs.getInt(1) );
+			}
+		}catch (Exception e) {			
+			throw new ExceptionGenerico(FALLO_QUERY, e.getCause(), log);
+		} finally {
+			if (statement!=null) {
+					statement.close();
+			}
+			if (rs!= null) {
+					rs.close();
+			}
+		}
+		return null;
+	}
+
+	public Response<Object> execQueryActualiza(String query) throws SQLException, ExceptionGenerico{
+		try {
+			connection = database.getConnection();
+			connection.setAutoCommit(false);
+			statement = connection.createStatement();
+			statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+			connection.setAutoCommit(true);
+			return new Response<>(false, HttpStatus.OK.value(), ConstantsMensajes.EXITO.getMensaje(), true);
+		}catch (Exception e) {
+			throw new ExceptionGenerico(FALLO_QUERY, e.getCause(), log);
+		} finally {
+			if (statement!=null) {
+				statement.close();
+			}
+			if (rs!= null) {
+				rs.close();
+			}
+		}
+	}
+	
 }

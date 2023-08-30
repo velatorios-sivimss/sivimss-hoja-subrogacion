@@ -11,8 +11,8 @@
 	<groupId>com.imss.sivimss</groupId>
 	<artifactId>hoja-subrogacion</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ms arquetipo</name>
-	<description>Ms arquetipo</description>
+	<name>ms hoja subrogacion</name>
+	<description>Hoja de Subrogacion</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
@@ -191,6 +191,16 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+				
+      		 <dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-jdbc</artifactId>
+    	</dependency>
 	</dependencies>
 	<build>
 		<plugins>

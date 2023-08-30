@@ -18,4 +18,7 @@ public interface HojaSubrogacionService {
     Response<?> generarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException;
 
     Response<?> busquedaServicios(DatosRequest request, Authentication authentication) throws IOException;
+
+	Response<Object> insertaHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException;
+	Response<Object> modificarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException;
 }
