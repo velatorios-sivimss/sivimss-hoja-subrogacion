@@ -27,7 +27,7 @@ public class SelectQueryUtil {
     private static final String COLON = ":";
     private static final String ORDER_BY = "ORDER BY";
     private static final String GROUP_BY = "GROUP BY";
-    private static final String LIMIT = "LIMIT";
+    private static final String LIMITE = "LIMIT";
     private static final String UNION = "UNION";
     private static final String ALL = "ALL";
     private static final String UNION_ALL = UNION + " " + ALL;
@@ -231,7 +231,6 @@ public class SelectQueryUtil {
      * @return
      * @since 1.0.0
      */
-    @SuppressWarnings("UnusedReturnValue")
     public SelectQueryUtil setParameter(String nombre, Object valor) {
         if (this.parametros == null) {
             this.parametros = new HashMap<>();
@@ -248,7 +247,6 @@ public class SelectQueryUtil {
      * @return
      * @since 1.0.0
      */
-    @SuppressWarnings("UnusedReturnValue")
     public SelectQueryUtil orderBy(String columna) {
         this.orderBy.add(columna);
         return this;
@@ -492,7 +490,7 @@ public class SelectQueryUtil {
      * @return
      * @since 1.0.2
      */
-    public String encrypt(String query) throws UnsupportedEncodingException {
+    public String encrypt(String query) {
         return DatatypeConverter
                 .printBase64Binary(query.getBytes(StandardCharsets.UTF_8));
     }
@@ -572,7 +570,7 @@ public class SelectQueryUtil {
     private void agregarLimit(StringBuilder stringBuilder) {
         if (limit != null) {
             stringBuilder.append(SPACE)
-                    .append(LIMIT)
+                    .append(LIMITE)
                     .append(SPACE)
                     .append(limit.toString());
         }

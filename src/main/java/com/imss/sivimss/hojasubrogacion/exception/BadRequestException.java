@@ -2,17 +2,22 @@ package com.imss.sivimss.hojasubrogacion.exception;
 
 import org.springframework.http.HttpStatus;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class BadRequestException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	private HttpStatus codigo;
+	private final HttpStatus codigo;
 
-	private String mensaje;
+	private final String mensaje;
 
-	private String datos;
+	private final String datos;
 
-	private boolean error;
+	private final boolean error;
 
 	public BadRequestException(HttpStatus codigo, String mensaje) {
 		super(mensaje);
@@ -22,35 +27,4 @@ public class BadRequestException extends RuntimeException {
 		this.error = true;
 	}
 
-	public HttpStatus getEstado() {
-		return codigo;
-	}
-
-	public void setEstado(HttpStatus estado) {
-		this.codigo = estado;
-	}
-
-	public String getMensaje() {
-		return mensaje;
-	}
-
-	public void setMensaje(String mensaje) {
-		this.mensaje = mensaje;
-	}
-
-	public String getDatos() {
-		return datos;
-	}
-
-	public void setDatos(String datos) {
-		this.datos = datos;
-	}
-
-	public boolean isError() {
-		return error;
-	}
-
-	public void setError(boolean error) {
-		this.error = error;
-	}
 }
