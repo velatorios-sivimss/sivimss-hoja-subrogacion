@@ -14,7 +14,7 @@ public class HojaSubrogacion {
 	
 
 	public String queryInsertHojaSubrogacion(HojaSubrogacionRequest hojaSubrogacionResponse, Integer idUsuarioAlta) {
-		QueryHelper q = new QueryHelper("INSERT INTO SVT_HOJA_SUBROGACIONv");
+		QueryHelper q = new QueryHelper("INSERT INTO SVT_HOJA_SUBROGACION");
 		q = setValores(q, hojaSubrogacionResponse);
 		q.agregarParametroValues("ID_USUARIO_ALTA", "" + idUsuarioAlta);
 		q.agregarParametroValues("FEC_ALTA", "CURRENT_TIMESTAMP()");
@@ -23,7 +23,7 @@ public class HojaSubrogacion {
 		return query;
 	}
 	public String queryUpdateHojaSubrogacion(HojaSubrogacionRequest hojaSubrogacionResponse, Integer idUsuarioAlta) {
-		QueryHelper q = new QueryHelper("UPDATE SVT_HOJA_SUBROGACIONc");
+		QueryHelper q = new QueryHelper("UPDATE SVT_HOJA_SUBROGACION");
 		q = setValores(q, hojaSubrogacionResponse);
 		q.agregarParametroValues("ID_USUARIO_MODIFICA", "" + idUsuarioAlta);
 		q.agregarParametroValues("FEC_ACTUALIZACION", "CURRENT_TIMESTAMP()");
