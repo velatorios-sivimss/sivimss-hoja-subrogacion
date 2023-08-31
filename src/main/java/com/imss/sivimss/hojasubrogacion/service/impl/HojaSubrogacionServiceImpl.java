@@ -31,6 +31,7 @@ import com.imss.sivimss.hojasubrogacion.beans.HojaSubrogacion;
 import com.imss.sivimss.hojasubrogacion.beans.FolioOrdenServicio;
 import com.imss.sivimss.hojasubrogacion.model.request.FolioRequest;
 import com.imss.sivimss.hojasubrogacion.model.request.HojaSubrogacionRequest;
+import com.imss.sivimss.hojasubrogacion.model.request.ReporteRequest;
 import com.imss.sivimss.hojasubrogacion.model.request.UsuarioDto;
 import com.imss.sivimss.hojasubrogacion.model.response.FolioResponse;
 import com.imss.sivimss.hojasubrogacion.model.response.ProveedorResponse;
@@ -63,6 +64,8 @@ public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
 	private String urlDominio;
 	@Value("${endpoints.ms-reportes}")
 	private String urlReportes;
+	@Value("${reporte.consulta-hoja-subrogacion}")
+	private String reporteConsultaHojaSubrogacion;
 	
 	@Autowired
 	private Database database;
@@ -70,6 +73,8 @@ public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
 	private Connection connection; 
 	private ResultSet rs;	
 	private Statement statement;
+	
+	Response<Object> response;
 
 
 	private static final String CU037_NOMBRE = "Hoja-Subrogacion: ";
@@ -79,6 +84,15 @@ public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
 	
 	private static final String AGREGADO_CORRECTAMENTE = "30"; // Agregado correctamente..
 	private static final String MODIFICADO_CORRECTAMENTE = "18"; // Modificado correctamente.
+	
+	private static final String ERROR_AL_DESCARGAR_DOCUMENTO = "64"; // Error en la descarga del documento.Intenta  nuevamente.
+	private static final String ERROR_AL_EJECUTAR_EL_QUERY = "Error al ejecutar el query ";
+	private static final String NO_SE_ENCONTRO_INFORMACION = "45"; // No se encontró información relacionada a tu
+	private static final String ERROR_INFORMACION = "52"; // Error al consultar la información.
+	private static final String GENERAR_DOCUMENTO = "Generar Reporte: " ;
+	private static final String GENERA_DOCUMENTO = "Genera_Documento";
+	private static final String CONSULTA_PAGINADO = "/paginado";
+	private static final String CONSULTA = "consulta";
 	
 	public HojaSubrogacionServiceImpl(ProviderServiceRestTemplate providerServiceRestTemplate, ModelMapper modelMapper, LogUtil logUtil) {
 		this.providerServiceRestTemplate = providerServiceRestTemplate;
@@ -254,6 +268,49 @@ public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
 				rs.close();
 			}
 		}
+	}
+	
+	@Override
+	public Response<Object> consultaHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException {
+		String consulta = "";
+		try {
+			ReporteRequest reporteRequest= new Gson().fromJson(String.valueOf(request.getDatos().get(AppConstantes.DATOS)), ReporteRequest.class);
+			logUtil.crearArchivoLog(Level.INFO.toString(), this.getClass().getSimpleName(),this.getClass().getPackage().toString(), " consulta plan SFPA ", CONSULTA, authentication);
+			Map<String, Object> envioDatos = new ConsultaHojaSubrogacion().consultaHojaSubrogacion(request, reporteRequest).getDatos();
+			consulta = queryDecoded(envioDatos);
+			return MensajeResponseUtil.mensajeResponseObject(providerServiceRestTemplate.consumirServicio(envioDatos,
+					urlDominio.concat(CONSULTA_PAGINADO), authentication),NO_SE_ENCONTRO_INFORMACION);
+		} catch (Exception e) {
+			log.error( CU037_NOMBRE + ERROR_AL_EJECUTAR_EL_QUERY + ", {}",consulta);
+			logUtil.crearArchivoLog(Level.SEVERE.toString(), this.getClass().getSimpleName(),this.getClass().getPackage().toString(), FALLO_QUERY + consulta, CONSULTA,
+					authentication);
+			throw new IOException(ERROR_INFORMACION, e.getCause());
+		}
+	}
+	
+	private String queryDecoded (Map<String, Object> envioDatos ) {
+		return new String(DatatypeConverter.parseBase64Binary(envioDatos.get(AppConstantes.QUERY).toString()));
+	}
+	
+	@Override
+	public Response<Object> generarReporteHojaSubrogacion(DatosRequest request, Authentication authentication)
+			throws IOException {
+		String consulta = "";
+		try {
+			ReporteRequest reporteRequest= new Gson().fromJson(String.valueOf(request.getDatos().get(AppConstantes.DATOS)), ReporteRequest.class);
+			logUtil.crearArchivoLog(Level.INFO.toString(), CU037_NOMBRE + GENERAR_DOCUMENTO + " Reporte Plan SFPA " + this.getClass().getSimpleName(),
+					this.getClass().getPackage().toString(), "generarReporteHojaSubrogacion", GENERA_DOCUMENTO, authentication);
+			Map<String, Object> envioDatos = new ConsultaHojaSubrogacion().generarReporteConsultaHojaSubrogacion(reporteRequest,reporteConsultaHojaSubrogacion);
+			consulta = envioDatos.get("condicion").toString();
+			response = providerServiceRestTemplate.consumirServicio(envioDatos, urlReportes, authentication);
+			MensajeResponseUtil.mensajeResponseObject(response, ERROR_AL_DESCARGAR_DOCUMENTO);
+		} catch (Exception e) {
+			log.error( CU037_NOMBRE + ERROR_AL_EJECUTAR_EL_QUERY + ", {}",consulta);
+			logUtil.crearArchivoLog(Level.SEVERE.toString(), this.getClass().getSimpleName(),this.getClass().getPackage().toString(), FALLO_QUERY + consulta, CONSULTA,
+					authentication);
+			throw new IOException(ERROR_INFORMACION, e.getCause());
+		}
+		return response;
 	}
 	
 }

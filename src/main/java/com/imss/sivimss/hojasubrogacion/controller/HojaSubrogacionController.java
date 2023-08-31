@@ -100,6 +100,21 @@ public class HojaSubrogacionController {
 		return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
 	}
 	
+	@PostMapping("/filtro-hoja-subrogacion")
+	@CircuitBreaker(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@Retry(name = "msflujo", fallbackMethod = "fallbackGenerico")
+	@TimeLimiter(name = "msflujo")
+	public CompletableFuture<Object> consultaHojaSubrogacion(@RequestBody DatosRequest request,Authentication authentication) throws IOException {
+		Response<Object> response =  hojaSubrogacionService.consultaHojaSubrogacion(request, authentication);
+		return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
+	}
+	
+	@PostMapping("/generar/reporte-consulta-hoja-subrogacion")
+	public CompletableFuture<Object> generarReporteHojaSubrogacion(@RequestBody DatosRequest request,Authentication authentication) throws IOException {
+		Response<Object> response = hojaSubrogacionService.generarReporteHojaSubrogacion(request, authentication);
+		return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(response, HttpStatus.valueOf(response.getCodigo())));
+	}
+	
 	/**
 	 * fallbacks generico
 	 * 
