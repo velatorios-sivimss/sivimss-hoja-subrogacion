@@ -86,7 +86,7 @@ public class ConsultaHojaSubrogacion {
         DatosRequest dr = new DatosRequest();
         Map<String, Object> parametro = new HashMap<>();
         SelectQueryUtil query = new SelectQueryUtil();
-        query.select("SS.REF_SERVICIO AS servicio", "ss.ID_SERVICIO  as idServicio")
+        query.select("SS.REF_SERVICIO AS servicio", "SS.ID_SERVICIO  as idServicio")
                 .from("SVT_HOJA_SUBROGACION SHS")
                 .join("SVC_ORDEN_SERVICIO SOS", "SHS.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO")
                 .join("SVC_CARAC_PRESUPUESTO SCP", "SOS.ID_ORDEN_SERVICIO = SCP.ID_ORDEN_SERVICIO")
