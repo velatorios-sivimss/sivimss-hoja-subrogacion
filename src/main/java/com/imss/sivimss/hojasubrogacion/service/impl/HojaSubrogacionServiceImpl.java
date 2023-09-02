@@ -161,6 +161,7 @@ public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
 
 	@Override
 	public Response<?> generarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException {
+		log.info("dr - " + request.getDatos());
 		JsonObject jsonObj = JsonParser.parseString((String) request.getDatos().get(AppConstantes.DATOS)).getAsJsonObject();
 		String idHojaSr = jsonObj.get("idHojaSubrogacion").getAsString();
 		Map<String, Object> datosReporte = new HashMap<>();
@@ -172,7 +173,9 @@ public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
 
 	@Override
 	public Response<?> busquedaServicios(DatosRequest request, Authentication authentication) throws IOException {
-		return providerServiceRestTemplate.consumirServicio( new ConsultaHojaSubrogacion().buscarServicios().getDatos()
+		JsonObject jsonObj = JsonParser.parseString((String) request.getDatos().get(AppConstantes.DATOS)).getAsJsonObject();
+		String idOrdenServicio = jsonObj.get("idOrdenServicio").getAsString();
+		return providerServiceRestTemplate.consumirServicio( new ConsultaHojaSubrogacion().buscarServicios(idOrdenServicio).getDatos()
 				,urlDominio + AppConstantes.CATALOGO_CONSULTAR,authentication);
 	}
 
