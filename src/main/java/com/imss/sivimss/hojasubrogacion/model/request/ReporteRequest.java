@@ -11,10 +11,9 @@ import lombok.Setter;
 public class ReporteRequest {
 	
 	private Integer idVelatorio;
-	private Integer idOrdenServicio;
+	private String folioOrdenServicio;
 	private Integer idProveedor;
-	private String fechaInicio;
-	private String fechaFin;
+	private String fecha;
 	private String tipoReporte;
 	
 }

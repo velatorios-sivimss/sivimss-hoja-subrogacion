@@ -23,8 +23,6 @@ public interface HojaSubrogacionService {
 	
 	Response<Object> modificarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException;
 	
-	Response<Object> consultaHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException;
-	
 	Response<Object> generarReporteHojaSubrogacion(DatosRequest request, Authentication authentication)throws IOException ;
 
 }
