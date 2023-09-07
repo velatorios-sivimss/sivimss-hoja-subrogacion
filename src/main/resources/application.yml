@@ -49,7 +49,7 @@ endpoints:
    ms-reportes: ${msit_REPORTES_GENERALES}
    
 reporte:
-  consulta-hoja-subrogacion: "reportes/generales/ReporteHojaSubrogacion.jrxml"
+  consulta-hoja-subrogacion: ${msit_HOJA_SUBROGACION}
 
 jwt:
   secretkey-flujo: ${msit_SECRET_KEY}
