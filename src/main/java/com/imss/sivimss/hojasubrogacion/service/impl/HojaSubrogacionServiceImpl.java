@@ -87,11 +87,9 @@ public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
 	
 	private static final String ERROR_AL_DESCARGAR_DOCUMENTO = "64"; // Error en la descarga del documento.Intenta  nuevamente.
 	private static final String ERROR_AL_EJECUTAR_EL_QUERY = "Error al ejecutar el query ";
-	private static final String NO_SE_ENCONTRO_INFORMACION = "45"; // No se encontró información relacionada a tu
 	private static final String ERROR_INFORMACION = "52"; // Error al consultar la información.
 	private static final String GENERAR_DOCUMENTO = "Generar Reporte: " ;
 	private static final String GENERA_DOCUMENTO = "Genera_Documento";
-	private static final String CONSULTA_PAGINADO = "/paginado";
 	private static final String CONSULTA = "consulta";
 	
 	public HojaSubrogacionServiceImpl(ProviderServiceRestTemplate providerServiceRestTemplate, ModelMapper modelMapper, LogUtil logUtil) {
@@ -271,28 +269,6 @@ public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
 				rs.close();
 			}
 		}
-	}
-	
-	@Override
-	public Response<Object> consultaHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException {
-		String consulta = "";
-		try {
-			ReporteRequest reporteRequest= new Gson().fromJson(String.valueOf(request.getDatos().get(AppConstantes.DATOS)), ReporteRequest.class);
-			logUtil.crearArchivoLog(Level.INFO.toString(), this.getClass().getSimpleName(),this.getClass().getPackage().toString(), " consulta plan SFPA ", CONSULTA, authentication);
-			Map<String, Object> envioDatos = new ConsultaHojaSubrogacion().consultaHojaSubrogacion(request, reporteRequest).getDatos();
-			consulta = queryDecoded(envioDatos);
-			return MensajeResponseUtil.mensajeResponseObject(providerServiceRestTemplate.consumirServicio(envioDatos,
-					urlDominio.concat(CONSULTA_PAGINADO), authentication),NO_SE_ENCONTRO_INFORMACION);
-		} catch (Exception e) {
-			log.error( CU037_NOMBRE + ERROR_AL_EJECUTAR_EL_QUERY + ", {}",consulta);
-			logUtil.crearArchivoLog(Level.SEVERE.toString(), this.getClass().getSimpleName(),this.getClass().getPackage().toString(), FALLO_QUERY + consulta, CONSULTA,
-					authentication);
-			throw new IOException(ERROR_INFORMACION, e.getCause());
-		}
-	}
-	
-	private String queryDecoded (Map<String, Object> envioDatos ) {
-		return new String(DatatypeConverter.parseBase64Binary(envioDatos.get(AppConstantes.QUERY).toString()));
 	}
 	
 	@Override
