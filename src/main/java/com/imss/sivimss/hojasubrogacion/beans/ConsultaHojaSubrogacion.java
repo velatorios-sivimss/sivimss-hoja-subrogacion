@@ -123,54 +123,99 @@ public class ConsultaHojaSubrogacion {
         if(!Objects.isNull(request.getFecha())){
             fecha = " and SHS.FEC_GENERACION_HOJA  = '" + request.getFecha() + "'";
         }
-       String consulta = "select pablito.idHojaSubrogacion,pablito.fechaOds,pablito.folioOds,pablito.idOds,pablito.proveedor,pablito.nombreFinado,pablito.origen,\n" +
-               "pablito.destino,pablito.totalKilometros,\n" +
-               "case when (pablito.registrados - pablito.serviciosRegistrados) = 0 then 'false' \n" +
-               "else 'true' end as puedeRegistrar\n" +
-               ",pablito.tipoServicio\n" +
-               "from\n" +
-               "(\n" +
-               "select SHS.ID_HOJA_SUBROGACION as idHojaSubrogacion,\n" +
-               "serv.REF_SERVICIO as tipoServicio,\n" +
-               "\t(DATE_FORMAT(SOS.FEC_ALTA , '%d-%m-%Y')) as fechaOds,\n" +
-               "\tSOS.CVE_FOLIO as folioOds,\n" +
-               "\tSOS.ID_ORDEN_SERVICIO as idOds,\n" +
-               "\tPRO.NOM_PROVEEDOR as proveedor,\n" +
-               "\tCONCAT(SP.NOM_PERSONA, ' ', SP.NOM_PRIMER_APELLIDO, ' ', SP.NOM_SEGUNDO_APELLIDO) as nombreFinado,\n" +
-               "\tcpt.DES_ORIGEN as origen,\n" +
-               "\tcpt.DES_DESTINO as destino,\n" +
-               "\tcpt.CAN_TOTAL_KILOMETROS as totalKilometros,\n" +
-               "\t(select count(shs.ID_ORDEN_SERVICIO)  from SVT_HOJA_SUBROGACION shs \n" +
-               "where shs.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO) as registrados,\n" +
-               "\t(select count(ods.ID_ORDEN_SERVICIO)  from SVC_ORDEN_SERVICIO ods \n" +
-               "join SVC_CARAC_PRESUPUESTO scp on ods.ID_ORDEN_SERVICIO = scp.ID_ORDEN_SERVICIO \n" +
-               "join SVC_DETALLE_CARAC_PRESUP sdcp on scp.ID_CARAC_PRESUPUESTO  = sdcp.ID_CARAC_PRESUPUESTO \n" +
-               "join SVT_SERVICIO ss on sdcp.ID_SERVICIO = ss.ID_SERVICIO \n" +
-               "where ods.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO \n" +
-               "group by ods.ID_ORDEN_SERVICIO) as serviciosRegistrados\n" +
-               "from\n" +
-               "\t SVC_ORDEN_SERVICIO SOS\n" +
-               "left join SVT_HOJA_SUBROGACION SHS on\n" +
-               "\tSOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO " +  fecha +
-               "left join SVC_FINADO SF on\n" +
-               "\tSHS.ID_FINADO = SF.ID_FINADO\n" +
-               "\tleft join SVC_PERSONA SP on\n" +
-               "\tSF.ID_PERSONA = SP.ID_PERSONA\n" +
-               "left join SVT_PROVEEDOR PRO on\n" +
-               "\tSHS.ID_PROVEEDOR = PRO.ID_PROVEEDOR\n" +
-               "left join SVC_CARAC_PRESUPUESTO scp on\n" +
-               "\tSOS.ID_ORDEN_SERVICIO = scp.ID_ORDEN_SERVICIO\n" +
-               " join SVC_DETALLE_CARAC_PRESUP dcp on\n" +
-               "\tscp.ID_CARAC_PRESUPUESTO = scp.ID_CARAC_PRESUPUESTO\n" +
-               "\tjoin SVT_SERVICIO serv on dcp.ID_SERVICIO = serv.ID_SERVICIO \n" +
-               "left join SVC_CARAC_PRESUP_TRASLADO cpt on\n" +
-               "\tdcp.ID_DETALLE_CARACTERISTICAS = cpt.ID_DETALLE_CARACTERISTICAS\n" +
-               "where\n" +
-               "SOS.ID_ESTATUS_ORDEN_SERVICIO IN(4,6)\n" +
-                       velatorio +
-                       folio +
-                       proveedor +
-               " \tgroup by scp.ID_CARAC_PRESUPUESTO , SHS.ID_HOJA_SUBROGACION ) as pablito";
+        String consulta = "select\n" +
+                "\tpablito.idHojaSubrogacion,\n" +
+                "\tpablito.tipoTranslado,\n" +
+                "\tpablito.nombreOperador,\n" +
+                "\tpablito.nombreAcompaniante,\n" +
+                "\tpablito.numCarroza,\n" +
+                "\tpablito.numPlacas,\n" +
+                "\tpablito.horaPartida,\n" +
+                "\tpablito.diaPartida,\n" +
+                "\tpablito.fechaOds,\n" +
+                "\tpablito.folioOds,\n" +
+                "\tpablito.idOds,\n" +
+                "\tpablito.proveedor,\n" +
+                "\tpablito.nombreFinado,\n" +
+                "\tpablito.origen,\n" +
+                "\tpablito.destino,\n" +
+                "\tpablito.totalKilometros,\n" +
+                "\tcase\n" +
+                "\t\twhen (pablito.registrados - pablito.serviciosRegistrados) = 0 then 'false'\n" +
+                "\t\telse 'true'\n" +
+                "\tend as puedeRegistrar\n" +
+                ",\n" +
+                "\tpablito.tipoServicio\n" +
+                "from\n" +
+                "\t(\n" +
+                "\tselect\n" +
+                "\t\tSHS.ID_HOJA_SUBROGACION as idHojaSubrogacion,\n" +
+                "\t\tSHS.TIP_TRASLADO as tipoTranslado,\n" +
+                "\t\tSHS.NOM_OPERADOR as nombreOperador,\n" +
+                "\t\tSHS.NOM_ACOMPANIANTE as nombreAcompaniante,\n" +
+                "\t\tSHS.REF_CARROZA_NUM as numCarroza,\n" +
+                "\t\tSHS.REF_NUMERO_PLACAS as numPlacas,\n" +
+                "\t\tSHS.TIM_HORA_PARTIDA as horaPartida,\n" +
+                "\t\tSHS.FEC_DIA_PARTIDA as diaPartida,\n" +
+                "\t\tserv.REF_SERVICIO as tipoServicio,\n" +
+                "\t\t(DATE_FORMAT(SOS.FEC_ALTA , '%d-%m-%Y')) as fechaOds,\n" +
+                "\t\tSOS.CVE_FOLIO as folioOds,\n" +
+                "\t\tSOS.ID_ORDEN_SERVICIO as idOds,\n" +
+                "\t\tPRO.NOM_PROVEEDOR as proveedor,\n" +
+                "\t\tCONCAT(SP.NOM_PERSONA, ' ', SP.NOM_PRIMER_APELLIDO, ' ', SP.NOM_SEGUNDO_APELLIDO) as nombreFinado,\n" +
+                "\t\tcpt.DES_ORIGEN as origen,\n" +
+                "\t\tcpt.DES_DESTINO as destino,\n" +
+                "\t\tcpt.CAN_TOTAL_KILOMETROS as totalKilometros,\n" +
+                "\t\t(\n" +
+                "\t\tselect\n" +
+                "\t\t\tcount(shs.ID_ORDEN_SERVICIO)\n" +
+                "\t\tfrom\n" +
+                "\t\t\tSVT_HOJA_SUBROGACION shs\n" +
+                "\t\twhere\n" +
+                "\t\t\tshs.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO) as registrados,\n" +
+                "\t\t(\n" +
+                "\t\tselect\n" +
+                "\t\t\tcount(ods.ID_ORDEN_SERVICIO)\n" +
+                "\t\tfrom\n" +
+                "\t\t\tSVC_ORDEN_SERVICIO ods\n" +
+                "\t\tjoin SVC_CARAC_PRESUPUESTO scp on\n" +
+                "\t\t\tods.ID_ORDEN_SERVICIO = scp.ID_ORDEN_SERVICIO\n" +
+                "\t\tjoin SVC_DETALLE_CARAC_PRESUP sdcp on\n" +
+                "\t\t\tscp.ID_CARAC_PRESUPUESTO = sdcp.ID_CARAC_PRESUPUESTO\n" +
+                "\t\tjoin SVT_SERVICIO ss on\n" +
+                "\t\t\tsdcp.ID_SERVICIO = ss.ID_SERVICIO\n" +
+                "\t\twhere\n" +
+                "\t\t\tods.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO\n" +
+                "\t\tgroup by\n" +
+                "\t\t\tods.ID_ORDEN_SERVICIO) as serviciosRegistrados\n" +
+                "\tfrom\n" +
+                "\t\tSVC_ORDEN_SERVICIO SOS\n" +
+                "\tleft join SVT_HOJA_SUBROGACION SHS on\n" +
+                "\t\tSOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO\n" +   fecha +
+                "\t\tand SHS.FEC_GENERACION_HOJA = '2023-08-25'\n" +
+                "\tleft join SVC_FINADO SF on\n" +
+                "\t\tSHS.ID_FINADO = SF.ID_FINADO\n" +
+                "\tleft join SVC_PERSONA SP on\n" +
+                "\t\tSF.ID_PERSONA = SP.ID_PERSONA\n" +
+                "\tleft join SVT_PROVEEDOR PRO on\n" +
+                "\t\tSHS.ID_PROVEEDOR = PRO.ID_PROVEEDOR\n" +
+                "\tleft join SVC_CARAC_PRESUPUESTO scp on\n" +
+                "\t\tSOS.ID_ORDEN_SERVICIO = scp.ID_ORDEN_SERVICIO\n" +
+                "\tjoin SVC_DETALLE_CARAC_PRESUP dcp on\n" +
+                "\t\tscp.ID_CARAC_PRESUPUESTO = scp.ID_CARAC_PRESUPUESTO\n" +
+                "\tjoin SVT_SERVICIO serv on\n" +
+                "\t\tdcp.ID_SERVICIO = serv.ID_SERVICIO\n" +
+                "\tleft join SVC_CARAC_PRESUP_TRASLADO cpt on\n" +
+                "\t\tdcp.ID_DETALLE_CARACTERISTICAS = cpt.ID_DETALLE_CARACTERISTICAS\n" +
+                "\twhere\n" +
+                "\t\tSOS.ID_ESTATUS_ORDEN_SERVICIO IN(4, 6)\n" +
+                velatorio +
+                folio +
+                proveedor +
+                "\tgroup by\n" +
+                "\t\tscp.ID_CARAC_PRESUPUESTO ,\n" +
+                "\t\tSHS.ID_HOJA_SUBROGACION ) as pablito";
+
         log.info(consulta);
         String encoded = DatatypeConverter.printBase64Binary(consulta.getBytes());
         parametro.put(AppConstantes.QUERY, encoded);
