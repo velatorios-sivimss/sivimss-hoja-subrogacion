@@ -77,7 +77,7 @@ public class ConsultaHojaSubrogacion {
         String proveedor = "";
         String fecha = "";
         if (!Objects.isNull(request.getIdVelatorio())) {
-            velatorio = " and SHS.ID_VELATORIO =" + request.getIdVelatorio();
+            velatorio = " and SOS.ID_VELATORIO =" + request.getIdVelatorio();
         }
         if(!Objects.isNull(request.getFolio())){
             folio = " and SOS.CVE_FOLIO = '" + request.getFolio() + "'";
