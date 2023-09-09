@@ -71,7 +71,6 @@ public class ConsultaHojaSubrogacion {
     public DatosRequest busquedaFiltros(FiltrosRequest request) {
         DatosRequest dr = new DatosRequest();
         Map<String, Object> parametro = new HashMap<>();
-        SelectQueryUtil query = new SelectQueryUtil();
         String velatorio = "";
         String folio = "";
         String proveedor = "";
@@ -86,25 +85,25 @@ public class ConsultaHojaSubrogacion {
             proveedor = " and PRO.ID_PROVEEDOR = " + request.getIdProveedor();
         }
         if(!Objects.isNull(request.getFecha())){
-            fecha = " and SHS.FEC_GENERACION_HOJA  = '" + request.getFecha() + "'";
+            fecha = " and SOS.FEC_ALTA like '%" + request.getFecha() + "%'";
         }
         String consulta = "select\n" +
-                "\tpablito.idHojaSubrogacion,\n" +
-                "\tpablito.tipoTranslado,\n" +
-                "\tpablito.nombreOperador,\n" +
-                "\tpablito.nombreAcompaniante,\n" +
-                "\tpablito.numCarroza,\n" +
-                "\tpablito.numPlacas,\n" +
-                "\tpablito.horaPartida,\n" +
-                "\tpablito.diaPartida,\n" +
-                "\tpablito.fechaOds,\n" +
-                "\tpablito.folioOds,\n" +
-                "\tpablito.idOds,\n" +
-                "\tpablito.proveedor,\n" +
-                "\tpablito.nombreFinado,\n" +
-                "\tpablito.origen,\n" +
-                "\tpablito.destino,\n" +
-                "\tpablito.totalKilometros,\n" +
+                "\tIFNULL(pablito.idHojaSubrogacion,'') AS idHojaSubrogacion,\n" +
+                "\tIFNULL(pablito.tipoTranslado,'') AS tipoTranslado,\n" +
+                "\tIFNULL(pablito.nombreOperador,'') AS nombreOperador,\n" +
+                "\tIFNULL(pablito.nombreAcompaniante,'') AS nombreAcompaniante,\n" +
+                "\tIFNULL(pablito.numCarroza,'') AS numCarroza,\n" +
+                "\tIFNULL(pablito.numPlacas,'') AS numPlacas,\n" +
+                "\tIFNULL(pablito.horaPartida,'') AS horaPartida,\n" +
+                "\tIFNULL(pablito.diaPartida,'') AS diaPartida,\n" +
+                "\tIFNULL(pablito.fechaOds,'') AS fechaOds,\n" +
+                "\tIFNULL(pablito.folioOds,'') AS folioOds,\n" +
+                "\tIFNULL(pablito.idOds,'') AS idOds,\n" +
+                "\tIFNULL(pablito.proveedor,'') AS proveedor,\n" +
+                "\tIFNULL(pablito.nombreFinado,'') AS nombreFinado,\n" +
+                "\tIFNULL(pablito.origen,'') AS origen,\n" +
+                "\tIFNULL(pablito.destino,'') AS destino,\n" +
+                "\tIFNULL(pablito.totalKilometros,'') AS totalKilometros,\n" +
                 "\tcase\n" +
                 "\t\twhen (pablito.registrados - pablito.serviciosRegistrados) = 0 then 'false'\n" +
                 "\t\telse 'true'\n" +
@@ -156,18 +155,17 @@ public class ConsultaHojaSubrogacion {
                 "\tfrom\n" +
                 "\t\tSVC_ORDEN_SERVICIO SOS\n" +
                 "\tleft join SVT_HOJA_SUBROGACION SHS on\n" +
-                "\t\tSOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO\n" +   fecha +
-                "\t\tand SHS.FEC_GENERACION_HOJA = '2023-08-25'\n" +
-                "\tleft join SVC_FINADO SF on\n" +
-                "\t\tSHS.ID_FINADO = SF.ID_FINADO\n" +
+                "\t\tSOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO\n" +
+                " \tleft join SVC_FINADO SF on\n" +
+                "\t\tSOS.ID_ORDEN_SERVICIO = SF.ID_ORDEN_SERVICIO \n" +
                 "\tleft join SVC_PERSONA SP on\n" +
                 "\t\tSF.ID_PERSONA = SP.ID_PERSONA\n" +
-                "\tleft join SVT_PROVEEDOR PRO on\n" +
-                "\t\tSHS.ID_PROVEEDOR = PRO.ID_PROVEEDOR\n" +
                 "\tleft join SVC_CARAC_PRESUPUESTO scp on\n" +
                 "\t\tSOS.ID_ORDEN_SERVICIO = scp.ID_ORDEN_SERVICIO\n" +
                 "\tjoin SVC_DETALLE_CARAC_PRESUP dcp on\n" +
                 "\t\tscp.ID_CARAC_PRESUPUESTO = scp.ID_CARAC_PRESUPUESTO\n" +
+                "\t\tleft join SVT_PROVEEDOR PRO on\n" +
+                "\t\tdcp.ID_PROVEEDOR = PRO.ID_PROVEEDOR\n" +
                 "\tjoin SVT_SERVICIO serv on\n" +
                 "\t\tdcp.ID_SERVICIO = serv.ID_SERVICIO\n" +
                 "\tleft join SVC_CARAC_PRESUP_TRASLADO cpt on\n" +
@@ -177,7 +175,8 @@ public class ConsultaHojaSubrogacion {
                 velatorio +
                 folio +
                 proveedor +
-                "\tgroup by\n" +
+                fecha +
+                " group by\n" +
                 "\t\tscp.ID_CARAC_PRESUPUESTO ,\n" +
                 "\t\tSHS.ID_HOJA_SUBROGACION ) as pablito";
 
