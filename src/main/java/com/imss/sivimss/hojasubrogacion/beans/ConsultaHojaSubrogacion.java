@@ -100,6 +100,7 @@ public class ConsultaHojaSubrogacion {
                 "\tIFNULL(pablito.folioOds,'') AS folioOds,\n" +
                 "\tIFNULL(pablito.idOds,'') AS idOds,\n" +
                 "\tIFNULL(pablito.proveedor,'') AS proveedor,\n" +
+                "\tIFNULL(pablito.idProveedor,'') AS idProveedor,\n" +
                 "\tIFNULL(pablito.nombreFinado,'') AS nombreFinado,\n" +
                 "\tIFNULL(pablito.origen,'') AS origen,\n" +
                 "\tIFNULL(pablito.destino,'') AS destino,\n" +
@@ -125,6 +126,7 @@ public class ConsultaHojaSubrogacion {
                 "\t\t(DATE_FORMAT(SOS.FEC_ALTA , '%d-%m-%Y')) as fechaOds,\n" +
                 "\t\tSOS.CVE_FOLIO as folioOds,\n" +
                 "\t\tSOS.ID_ORDEN_SERVICIO as idOds,\n" +
+                "\t\tdcp.ID_PROVEEDOR as idProveedor,\n" +
                 "\t\tPRO.NOM_PROVEEDOR as proveedor,\n" +
                 "\t\tCONCAT(SP.NOM_PERSONA, ' ', SP.NOM_PRIMER_APELLIDO, ' ', SP.NOM_SEGUNDO_APELLIDO) as nombreFinado,\n" +
                 "\t\tcpt.DES_ORIGEN as origen,\n" +
