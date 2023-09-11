@@ -52,8 +52,7 @@ public class ConsultaHojaSubrogacion {
         Map<String, Object> parametro = new HashMap<>();
         SelectQueryUtil query = new SelectQueryUtil();
         query.select("SS.REF_SERVICIO AS servicio", "SS.ID_SERVICIO  as idServicio")
-                .from("SVT_HOJA_SUBROGACION SHS")
-                .join("SVC_ORDEN_SERVICIO SOS", "SHS.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO")
+                .from("SVC_ORDEN_SERVICIO SOS")
                 .join("SVC_CARAC_PRESUPUESTO SCP", "SOS.ID_ORDEN_SERVICIO = SCP.ID_ORDEN_SERVICIO")
                 .join("SVC_DETALLE_CARAC_PRESUP SDCP", "SCP.ID_CARAC_PRESUPUESTO = SDCP.ID_CARAC_PRESUPUESTO")
                 .and("SDCP.ID_SERVICIO NOT IN (SELECT HS.ID_SERVICIO FROM SVT_HOJA_SUBROGACION HS " +
@@ -105,6 +104,8 @@ public class ConsultaHojaSubrogacion {
                 "\tIFNULL(pablito.origen,'') AS origen,\n" +
                 "\tIFNULL(pablito.destino,'') AS destino,\n" +
                 "\tIFNULL(pablito.totalKilometros,'') AS totalKilometros,\n" +
+                "\tIFNULL(pablito.especificaciones,'') AS especificaciones,\n" +
+                "\tIFNULL(pablito.idServicio,'') AS idServicio,\n" +
                 "\tcase\n" +
                 "\t\twhen (pablito.registrados - pablito.serviciosRegistrados) = 0 then 'false'\n" +
                 "\t\telse 'true'\n" +
@@ -122,6 +123,8 @@ public class ConsultaHojaSubrogacion {
                 "\t\tSHS.REF_NUMERO_PLACAS as numPlacas,\n" +
                 "\t\tSHS.TIM_HORA_PARTIDA as horaPartida,\n" +
                 "\t\tSHS.FEC_DIA_PARTIDA as diaPartida,\n" +
+                "\t\tSHS.REF_ESPECIFICACIONES as especificaciones,\n" +
+                "\t\tSHS.ID_SERVICIO as idServicio,\n" +
                 "\t\tserv.REF_SERVICIO as tipoServicio,\n" +
                 "\t\t(DATE_FORMAT(SOS.FEC_ALTA , '%d-%m-%Y')) as fechaOds,\n" +
                 "\t\tSOS.CVE_FOLIO as folioOds,\n" +
