@@ -78,7 +78,7 @@ public class ConsultaHojaSubrogacion {
             velatorio = " and SOS.ID_VELATORIO =" + request.getIdVelatorio();
         }
         if(!Objects.isNull(request.getFolio())){
-            folio = " and SOS.CVE_FOLIO = '" + request.getFolio() + "'";
+            folio = " and SOS.ID_ORDEN_SERVICIO = '" + request.getFolio() + "'";
         }
         if(!Objects.isNull(request.getIdProveedor())){
             proveedor = " and PRO.ID_PROVEEDOR = " + request.getIdProveedor();
