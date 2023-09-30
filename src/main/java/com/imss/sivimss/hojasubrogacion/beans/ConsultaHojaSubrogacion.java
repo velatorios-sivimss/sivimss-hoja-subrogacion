@@ -168,7 +168,7 @@ public class ConsultaHojaSubrogacion {
                 "\tleft join SVC_CARAC_PRESUPUESTO scp on\n" +
                 "\t\tSOS.ID_ORDEN_SERVICIO = scp.ID_ORDEN_SERVICIO\n" +
                 "\tjoin SVC_DETALLE_CARAC_PRESUP dcp on\n" +
-                "\t\tscp.ID_CARAC_PRESUPUESTO = scp.ID_CARAC_PRESUPUESTO\n" +
+                 "\t\t dcp.ID_CARAC_PRESUPUESTO = scp.ID_CARAC_PRESUPUESTO\n" +
                 "\t\tleft join SVT_PROVEEDOR PRO on\n" +
                 "\t\tdcp.ID_PROVEEDOR = PRO.ID_PROVEEDOR\n" +
                 "\tjoin SVT_SERVICIO serv on\n" +
