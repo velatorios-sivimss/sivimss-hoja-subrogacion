@@ -100,6 +100,7 @@ public class ConsultaHojaSubrogacion {
                 "\tIFNULL(pablito.idOds,'') AS idOds,\n" +
                 "\tIFNULL(pablito.proveedor,'') AS proveedor,\n" +
                 "\tIFNULL(pablito.idProveedor,'') AS idProveedor,\n" +
+                "\tIFNULL(pablito.idFinado,'') AS idFinado,\n" +
                 "\tIFNULL(pablito.nombreFinado,'') AS nombreFinado,\n" +
                 "\tIFNULL(pablito.origen,'') AS origen,\n" +
                 "\tIFNULL(pablito.destino,'') AS destino,\n" +
@@ -131,6 +132,7 @@ public class ConsultaHojaSubrogacion {
                 "\t\tSOS.ID_ORDEN_SERVICIO as idOds,\n" +
                 "\t\tdcp.ID_PROVEEDOR as idProveedor,\n" +
                 "\t\tPRO.NOM_PROVEEDOR as proveedor,\n" +
+                "\t\tSF.ID_FINADO as idFinado,\n" +
                 "\t\tCONCAT(SP.NOM_PERSONA, ' ', SP.NOM_PRIMER_APELLIDO, ' ', SP.NOM_SEGUNDO_APELLIDO) as nombreFinado,\n" +
                 "\t\tcpt.DES_ORIGEN as origen,\n" +
                 "\t\tcpt.DES_DESTINO as destino,\n" +
