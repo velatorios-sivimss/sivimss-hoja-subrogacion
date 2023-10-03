@@ -19,30 +19,30 @@ public class ConsultaHojaSubrogacion {
 
     public Map<String, Object> generarReporteConsultaHojaSubrogacion(ReporteRequest reporteRequest, String rutaNombreReporte) {
         Map<String, Object> envioDatos = new HashMap<>();
-        StringBuilder condicciones1 = new StringBuilder();
-        StringBuilder condicciones2 = new StringBuilder();
+        StringBuilder condicciones = new StringBuilder();
         
         if (reporteRequest.getIdVelatorio() != null) {
-        	condicciones1.append(" AND SHS.ID_VELATORIO = ").append(reporteRequest.getIdVelatorio());
+        	condicciones.append(" AND SOS.ID_VELATORIO  = ").append(reporteRequest.getIdVelatorio());
         }
         if (reporteRequest.getFolioOrdenServicio() != null) {
-        	condicciones1.append(" AND SOS.CVE_FOLIO = ").append(reporteRequest.getFolioOrdenServicio());
+        	condicciones.append(" AND SOS.ID_ORDEN_SERVICIO = ").append(reporteRequest.getFolioOrdenServicio());
         }
         if (reporteRequest.getIdProveedor() != null) {
-        	condicciones1.append(" AND PRO.ID_PROVEEDOR = ").append(reporteRequest.getIdProveedor());
+        	condicciones.append(" AND PRO.ID_PROVEEDOR = ").append(reporteRequest.getIdProveedor());
         }
         if (reporteRequest.getFecha() != null) {
-        	condicciones2.append(" AND SHS.FEC_GENERACION_HOJA  = '" + reporteRequest.getFecha() + "'");
+        	condicciones.append(" AND SOS.FEC_ALTA like '%").append(reporteRequest.getFecha() ).append("%'");
         }
         
-        log.info("condicion::  " + condicciones1);
-        log.info("condicion::  " + condicciones2);
+        log.info("condicion::  " + condicciones);
         log.info("tipoRepirte::  " + reporteRequest.getTipoReporte());
 
-        envioDatos.put("condicion", condicciones1.toString());
-        envioDatos.put("condicion1", condicciones2.toString());
+        envioDatos.put("condicion", condicciones.toString());
         envioDatos.put("tipoReporte", reporteRequest.getTipoReporte());
         envioDatos.put("rutaNombreReporte", rutaNombreReporte);
+		if(reporteRequest.getTipoReporte().equals("xls")) {
+			envioDatos.put("IS_IGNORE_PAGINATION", true);
+		}
 
         return envioDatos;
     }
