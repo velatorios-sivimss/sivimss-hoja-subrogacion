@@ -10,6 +10,7 @@ import java.util.logging.Level;
 
 import javax.xml.bind.DatatypeConverter;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.imss.sivimss.hojasubrogacion.beans.ConsultaHojaSubrogacion;
@@ -149,14 +150,16 @@ public class HojaSubrogacionServiceImpl implements HojaSubrogacionService{
 	public Response<?> busquedaFiltros(DatosRequest request, Authentication authentication) throws IOException {
 		Gson json = new Gson();
 		String datosJson = String.valueOf(request.getDatos().get(AppConstantes.DATOS));
+		JsonObject jsonObject = JsonParser.parseString(String.valueOf(request.getDatos())).getAsJsonObject();
+		String pagina = jsonObject.get("pagina").getAsString();
+		String tamanio = jsonObject.get("tamanio").getAsString();
 		FiltrosRequest filtros = json.fromJson(datosJson,FiltrosRequest.class);
-		return providerServiceRestTemplate.consumirServicio( new ConsultaHojaSubrogacion().busquedaFiltros(filtros).getDatos()
+		return providerServiceRestTemplate.consumirServicio( new ConsultaHojaSubrogacion().busquedaFiltros(filtros,pagina,tamanio).getDatos()
 		,urlDominio + AppConstantes.CATALOGO_CONSULTA_PAGINADO,authentication);
 	}
 
 	@Override
 	public Response<?> generarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException {
-		log.info("dr - " + request.getDatos());
 		JsonObject jsonObj = JsonParser.parseString((String) request.getDatos().get(AppConstantes.DATOS)).getAsJsonObject();
 		String idHojaSr = jsonObj.get("idHojaSubrogacion").getAsString();
 		Map<String, Object> datosReporte = new HashMap<>();

@@ -67,7 +67,7 @@ public class ConsultaHojaSubrogacion {
         return dr;
     }
 
-    public DatosRequest busquedaFiltros(FiltrosRequest request) {
+    public DatosRequest busquedaFiltros(FiltrosRequest request, String pagina, String tamanio) {
         DatosRequest dr = new DatosRequest();
         Map<String, Object> parametro = new HashMap<>();
         String velatorio = "";
@@ -190,8 +190,8 @@ public class ConsultaHojaSubrogacion {
         log.info(consulta);
         String encoded = DatatypeConverter.printBase64Binary(consulta.getBytes());
         parametro.put(AppConstantes.QUERY, encoded);
-        parametro.put("tamanio","10");
-        parametro.put("pagina","0");
+        parametro.put("tamanio",pagina);
+        parametro.put("pagina",tamanio);
         dr.setDatos(parametro);
         return dr;
     }
