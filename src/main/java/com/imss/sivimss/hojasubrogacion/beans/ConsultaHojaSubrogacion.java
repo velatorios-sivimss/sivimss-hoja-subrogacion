@@ -190,8 +190,8 @@ public class ConsultaHojaSubrogacion {
         log.info(consulta);
         String encoded = DatatypeConverter.printBase64Binary(consulta.getBytes());
         parametro.put(AppConstantes.QUERY, encoded);
-        parametro.put("tamanio",pagina);
-        parametro.put("pagina",tamanio);
+        parametro.put("tamanio",tamanio);
+        parametro.put("pagina",pagina);
         dr.setDatos(parametro);
         return dr;
     }
