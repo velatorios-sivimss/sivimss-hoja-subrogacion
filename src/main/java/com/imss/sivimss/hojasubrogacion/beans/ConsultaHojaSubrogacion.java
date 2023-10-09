@@ -25,7 +25,7 @@ public class ConsultaHojaSubrogacion {
         	condicciones.append(" AND SOS.ID_VELATORIO  = ").append(reporteRequest.getIdVelatorio());
         }
         if (reporteRequest.getFolioOrdenServicio() != null) {
-        	condicciones.append(" AND SOS.ID_ORDEN_SERVICIO = ").append(reporteRequest.getFolioOrdenServicio());
+        	condicciones.append(" AND SOS.ID_ORDEN_SERVICIO = '").append(reporteRequest.getFolioOrdenServicio()).append("'");
         }
         if (reporteRequest.getIdProveedor() != null) {
         	condicciones.append(" AND PRO.ID_PROVEEDOR = ").append(reporteRequest.getIdProveedor());
