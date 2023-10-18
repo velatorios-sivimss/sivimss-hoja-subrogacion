@@ -133,11 +133,11 @@ public class ConsultaHojaSubrogacion {
                 "\t\tSOS.CVE_FOLIO as folioOds,\n" +
                 "\t\tSOS.ID_ORDEN_SERVICIO as idOds,\n" +
                 "\t\tdcp.ID_PROVEEDOR as idProveedor,\n" +
-                "\t\tPRO.NOM_PROVEEDOR as proveedor,\n" +
+                "\t\tPRO.REF_PROVEEDOR as proveedor,\n" +
                 "\t\tSF.ID_FINADO as idFinado,\n" +
                 "\t\tCONCAT(SP.NOM_PERSONA, ' ', SP.NOM_PRIMER_APELLIDO, ' ', SP.NOM_SEGUNDO_APELLIDO) as nombreFinado,\n" +
-                "\t\tcpt.DES_ORIGEN as origen,\n" +
-                "\t\tcpt.DES_DESTINO as destino,\n" +
+                "\t\tcpt.REF_ORIGEN as origen,\n" +
+                "\t\tcpt.REF_DESTINO as destino,\n" +
                 "\t\tcpt.CAN_TOTAL_KILOMETROS as totalKilometros,\n" +
                 "\t\t(\n" +
                 "\t\tselect\n" +
