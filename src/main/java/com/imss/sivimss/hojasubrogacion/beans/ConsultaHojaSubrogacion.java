@@ -51,8 +51,8 @@ public class ConsultaHojaSubrogacion {
         DatosRequest dr = new DatosRequest();
         Map<String, Object> parametro = new HashMap<>();
         SelectQueryUtil query = new SelectQueryUtil();
-        query.select("SS.REF_SERVICIO AS servicio", "SS.ID_SERVICIO  as idServicio","IFNULL(CPT.DES_ORIGEN,'') AS origen",
-                        "IFNULL(CPT.DES_DESTINO,'') AS destino","IFNULL(CPT.CAN_TOTAL_KILOMETROS,'') AS totalKilometros")
+        query.select("SS.REF_SERVICIO AS servicio", "SS.ID_SERVICIO  as idServicio","IFNULL(CPT.REF_ORIGEN,'') AS origen",
+                        "IFNULL(CPT.REF_DESTINO,'') AS destino","IFNULL(CPT.CAN_TOTAL_KILOMETROS,'') AS totalKilometros")
                 .from("SVC_ORDEN_SERVICIO SOS")
                 .join("SVC_CARAC_PRESUPUESTO SCP", "SOS.ID_ORDEN_SERVICIO = SCP.ID_ORDEN_SERVICIO")
                 .join("SVC_DETALLE_CARAC_PRESUP SDCP", "SCP.ID_CARAC_PRESUPUESTO = SDCP.ID_CARAC_PRESUPUESTO")
