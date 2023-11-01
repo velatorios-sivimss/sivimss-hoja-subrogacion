@@ -17,7 +17,7 @@ public class HojaSubrogacion {
 		QueryHelper q = new QueryHelper("INSERT INTO SVT_HOJA_SUBROGACION");
 		q = setValores(q, hojaSubrogacionResponse);
 		q.agregarParametroValues("ID_USUARIO_ALTA", "" + idUsuarioAlta);
-		q.agregarParametroValues("FEC_ALTA", "CURRENT_TIMESTAMP()");
+		q.agregarParametroValues("FEC_ALTA", "CURRENT_DATE()");
 		String query = q.obtenerQueryInsertar();
 		log.info(query);
 		return query;
@@ -26,7 +26,7 @@ public class HojaSubrogacion {
 		QueryHelper q = new QueryHelper("UPDATE SVT_HOJA_SUBROGACION");
 		q = setValores(q, hojaSubrogacionResponse);
 		q.agregarParametroValues("ID_USUARIO_MODIFICA", "" + idUsuarioAlta);
-		q.agregarParametroValues("FEC_ACTUALIZACION", "CURRENT_TIMESTAMP()");
+		q.agregarParametroValues("FEC_ACTUALIZACION", "CURRENT_DATE()");
 		q.addWhere("ID_HOJA_SUBROGACION = " + hojaSubrogacionResponse.getIdHojaSubrogacion());
 		String query = q.obtenerQueryActualizar();
 		log.info(query);
