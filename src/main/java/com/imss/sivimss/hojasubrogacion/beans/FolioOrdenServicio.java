@@ -35,12 +35,12 @@ public class FolioOrdenServicio {
 	public DatosRequest obtenerProveedores(DatosRequest request, FolioRequest folioRequest ) {
 		log.info(" INICIO - obtenerProveedores");
 		SelectQueryUtil queryUtil = new SelectQueryUtil();
-		queryUtil.select("SP.ID_PROVEEDOR AS folioProveedor", "SP.NOM_PROVEEDOR AS nombreProveedor")
+		queryUtil.select("SP.ID_PROVEEDOR AS folioProveedor", "SP.REF_PROVEEDOR AS nombreProveedor")
 		.from("SVT_CONTRATO SC")
 		.innerJoin("SVT_PROVEEDOR SP", "SP.ID_PROVEEDOR = SC.ID_PROVEEDOR").and("SC.ID_TIPO_ASIGNACION = 2")
 		.innerJoin("SVC_VELATORIO SV", "SV.ID_VELATORIO = SC.ID_VELATORIO")
 		.where("IFNULL(SC.ID_CONTRATO,0) > 0")
-		.and("SP.NOM_PROVEEDOR LIKE'%"+folioRequest.getNombreProveedor()+"%'")
+		.and("SP.REF_PROVEEDOR LIKE'%"+folioRequest.getNombreProveedor()+"%'")
 		.and("SC.ID_VELATORIO = :idVelatorio").setParameter("idVelatorio", folioRequest.getIdVelatorio())
 		.orderBy("SP.ID_PROVEEDOR ASC");
 		final String query = queryUtil.build();
