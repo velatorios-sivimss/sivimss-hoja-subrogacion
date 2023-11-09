@@ -114,8 +114,8 @@ public class ConsultaHojaSubrogacion {
                 "\t\telse 'true'\n" +
                 "\tend as puedeRegistrar\n" +
                 ",\n" +
-                "\tpablito.tipoServicio\n" +
-                "from\n" +
+                "\tserv.REF_SERVICIO as tipoServicio \n" +
+                "from \n" +
                 "\t(\n" +
                 "\tselect\n" +
                 "\t\tSHS.ID_HOJA_SUBROGACION as idHojaSubrogacion,\n" +
@@ -187,7 +187,7 @@ public class ConsultaHojaSubrogacion {
                 fecha +
                 " group by\n" +
                 "\t\tscp.ID_CARAC_PRESUPUESTO ,\n" +
-                "\t\tSHS.ID_HOJA_SUBROGACION ) as pablito";
+                "\t\tSHS.ID_HOJA_SUBROGACION ) as pablito join SVT_SERVICIO serv ON serv.ID_SERVICIO = pablito.idServicio ";
 
         log.info(consulta);
         String encoded = DatatypeConverter.printBase64Binary(consulta.getBytes());
