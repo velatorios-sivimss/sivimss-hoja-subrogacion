@@ -187,7 +187,7 @@ public class ConsultaHojaSubrogacion {
                 fecha +
                 " group by\n" +
                 "\t\tscp.ID_CARAC_PRESUPUESTO ,\n" +
-                "\t\tSHS.ID_HOJA_SUBROGACION ) as pablito join SVT_SERVICIO serv ON serv.ID_SERVICIO = pablito.idServicio ";
+                "\t\tSHS.ID_HOJA_SUBROGACION ) as pablito left join SVT_SERVICIO serv ON serv.ID_SERVICIO = pablito.idServicio ";
 
         log.info(consulta);
         String encoded = DatatypeConverter.printBase64Binary(consulta.getBytes());
