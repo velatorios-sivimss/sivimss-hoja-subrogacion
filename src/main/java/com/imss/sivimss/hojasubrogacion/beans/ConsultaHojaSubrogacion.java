@@ -51,7 +51,9 @@ public class ConsultaHojaSubrogacion {
         DatosRequest dr = new DatosRequest();
         Map<String, Object> parametro = new HashMap<>();
         SelectQueryUtil query = new SelectQueryUtil();
-        query.select("SS.REF_SERVICIO AS servicio", "SS.ID_SERVICIO  as idServicio","IFNULL(CPT.REF_ORIGEN,'') AS origen",
+        query.select("SS.REF_SERVICIO AS servicio", "SS.ID_SERVICIO  as idServicio",
+        "SP.REF_PROVEEDOR AS nombreProveedor",
+        "IFNULL(CPT.REF_ORIGEN,'') AS origen",
                         "IFNULL(CPT.REF_DESTINO,'') AS destino","IFNULL(CPT.CAN_TOTAL_KILOMETROS,'') AS totalKilometros")
                 .from("SVC_ORDEN_SERVICIO SOS")
                 .join("SVC_CARAC_PRESUPUESTO SCP", "SOS.ID_ORDEN_SERVICIO = SCP.ID_ORDEN_SERVICIO")
@@ -59,6 +61,9 @@ public class ConsultaHojaSubrogacion {
                 .and("SDCP.ID_SERVICIO NOT IN (SELECT HS.ID_SERVICIO FROM SVT_HOJA_SUBROGACION HS " +
                         "WHERE HS.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO)").and("SDCP.IND_ACTIVO = 1")
                 .join("SVT_SERVICIO SS", "SDCP.ID_SERVICIO = SS.ID_SERVICIO")
+                .join("SVT_CONTRATO_SERVICIO SCS", "SS.ID_SERVICIO = SCS.ID_SERVICIO")
+                .join("SVT_CONTRATO SC","SCS.ID_CONTRATO = SC.ID_CONTRATO")
+                .join("SVT_PROVEEDOR SP","SC.ID_PROVEEDOR = SP.ID_PROVEEDOR")
                 .leftJoin("SVC_CARAC_PRESUP_TRASLADO CPT" ,"SDCP.ID_DETALLE_CARACTERISTICAS = CPT.ID_DETALLE_CARACTERISTICAS")
                 .where("SOS.ID_ORDEN_SERVICIO = " + idOrdenServicio);
         String consulta = query.build();
