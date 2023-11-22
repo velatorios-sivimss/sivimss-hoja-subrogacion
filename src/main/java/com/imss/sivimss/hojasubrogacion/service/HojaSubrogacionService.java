@@ -19,10 +19,12 @@ public interface HojaSubrogacionService {
 
     Response<?> busquedaServicios(DatosRequest request, Authentication authentication) throws IOException;
 
-	Response<Object> insertaHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException;
-	
-	Response<Object> modificarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException;
-	
-	Response<Object> generarReporteHojaSubrogacion(DatosRequest request, Authentication authentication)throws IOException ;
+    Response<Object> insertaHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException;
 
+    Response<Object> modificarHojaSubrogacion(DatosRequest request, Authentication authentication) throws IOException;
+
+    Response<Object> generarReporteHojaSubrogacion(DatosRequest request, Authentication authentication)
+            throws IOException;
+
+    Response<Object> busquedaDetalle(DatosRequest request, Authentication authentication) throws IOException;
 }
