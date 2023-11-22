@@ -228,24 +228,24 @@ public class ConsultaHojaSubrogacion {
     public DatosRequest buscarDetalle(String idHojaSubrogacion) {
         DatosRequest dr = new DatosRequest();
         Map<String, Object> parametro = new HashMap<>();
-        String consulta = "SELECT SHS.ID_HOJA_SUBROGACION AS idHojaSubrogacion,\r\n" + //
-                " SHS.ID_ORDEN_SERVICIO AS idOds,\r\n" + //
-                "  SHS.ID_PROVEEDOR AS idProveedor,\r\n" + //
-                "SHS.TIP_TRASLADO AS tipoTraslado,\r\n" + //
-                " SHS.REF_ORIGEN AS origen,\r\n" + //
-                "  SHS.REF_DESTINO AS destino,\r\n" + //
-                "   SHS.REF_DISTANCIA_RECORRER AS distancia,\r\n" + //
-                "SHS.ID_SERVICIO AS idServicio,\r\n" + //
-                " SHS.REF_ESPECIFICACIONES AS especificaciones,\r\n" + //
-                "  SHS.NOM_OPERADOR AS operador, \r\n" + //
-                "  SHS.REF_CARROZA_NUM AS carroza,\r\n" + //
-                "SHS.REF_NUMERO_PLACAS AS placas, \r\n" + //
-                "SHS.FEC_DIA_PARTIDA AS diaPartida, \r\n" + //
-                "SHS.TIM_HORA_PARTIDA AS horaPArtida,\r\n" + //
-                " SHS.NOM_ACOMPANIANTE AS acompaniante\r\n" + //
-                "FROM SVC_ORDEN_SERVICIO SOS \r\n" + //
-                "JOIN SVT_HOJA_SUBROGACION SHS ON \r\n" + //
-                " SOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO\r\n" + //
+        String consulta = "SELECT SHS.ID_HOJA_SUBROGACION AS idHojaSubrogacion,    " +
+                " SHS.ID_ORDEN_SERVICIO AS idOds,    " +
+                "  SHS.ID_PROVEEDOR AS idProveedor,    " +
+                " SHS.TIP_TRASLADO AS tipoTraslado,    " +
+                " SHS.REF_ORIGEN AS origen,    " +
+                "  SHS.REF_DESTINO AS destino,    " +
+                "   SHS.REF_DISTANCIA_RECORRER AS distancia,    " +
+                " SHS.ID_SERVICIO AS idServicio,    " +
+                " SHS.REF_ESPECIFICACIONES AS especificaciones,    " +
+                "  SHS.NOM_OPERADOR AS operador,     " +
+                "  SHS.REF_CARROZA_NUM AS carroza,    " +
+                " SHS.REF_NUMERO_PLACAS AS placas,     " +
+                " SHS.FEC_DIA_PARTIDA AS diaPartida,     " +
+                " SHS.TIM_HORA_PARTIDA AS horaPArtida,    " +
+                " SHS.NOM_ACOMPANIANTE AS acompaniante    " +
+                " FROM SVC_ORDEN_SERVICIO SOS     " +
+                " JOIN SVT_HOJA_SUBROGACION SHS ON     " +
+                " SOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO    " +
                 " WHERE SHS.ID_HOJA_SUBROGACION= " + idHojaSubrogacion;
         log.info(consulta);
         String encoded = DatatypeConverter.printBase64Binary(consulta.getBytes());
