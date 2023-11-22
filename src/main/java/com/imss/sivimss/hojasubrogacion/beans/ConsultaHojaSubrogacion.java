@@ -65,7 +65,7 @@ public class ConsultaHojaSubrogacion {
                 .and("SDCP.IND_ACTIVO = 1")
                 .join("SVT_SERVICIO SS", "SDCP.ID_SERVICIO = SS.ID_SERVICIO")
                 .join("SVT_CONTRATO_SERVICIO SCS", "SS.ID_SERVICIO = SCS.ID_SERVICIO")
-                .join("SVT_CONTRATO SC", "SCS.ID_CONTRATO = SC.ID_CONTRATO")
+                .join("SVT_CONTRATO SC", "SCS.ID_CONTRATO = SC.ID_CONTRATO AND SDCP.ID_PROVEEDOR = SC.ID_PROVEEDOR")
                 .join("SVT_PROVEEDOR SP", "SC.ID_PROVEEDOR = SP.ID_PROVEEDOR")
                 .leftJoin("SVC_CARAC_PRESUP_TRASLADO CPT",
                         "SDCP.ID_DETALLE_CARACTERISTICAS = CPT.ID_DETALLE_CARACTERISTICAS")
