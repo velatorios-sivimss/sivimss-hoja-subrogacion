@@ -242,9 +242,11 @@ public class ConsultaHojaSubrogacion {
                 " SHS.REF_NUMERO_PLACAS AS placas,     " +
                 " SHS.FEC_DIA_PARTIDA AS diaPartida,     " +
                 " SHS.TIM_HORA_PARTIDA AS horaPArtida,    " +
-                " SHS.NOM_ACOMPANIANTE AS acompaniante    " +
+                " SHS.NOM_ACOMPANIANTE AS acompaniante ,  " +
+                "  p.REF_PROVEEDOR AS proveedor " +
                 " FROM SVC_ORDEN_SERVICIO SOS     " +
                 " JOIN SVT_HOJA_SUBROGACION SHS ON     " +
+                " JOIN SVT_PROVEEDOR p ON p.ID_PROVEEDOR = SHS.ID_PROVEEDOR" +
                 " SOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO    " +
                 " WHERE SHS.ID_HOJA_SUBROGACION= " + idHojaSubrogacion;
         log.info(consulta);
