@@ -243,11 +243,16 @@ public class ConsultaHojaSubrogacion {
                 " SHS.FEC_DIA_PARTIDA AS diaPartida,     " +
                 " SHS.TIM_HORA_PARTIDA AS horaPArtida,    " +
                 " SHS.NOM_ACOMPANIANTE AS acompaniante ,  " +
-                "  p.REF_PROVEEDOR AS proveedor " +
+                "  p.REF_PROVEEDOR AS proveedor ," +
+                "  ts.DES_TIPO_SERVICIO AS servicio" +
                 " FROM SVC_ORDEN_SERVICIO SOS     " +
                 " JOIN SVT_HOJA_SUBROGACION SHS ON     " +
                 " SOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO    " +
                 " JOIN SVT_PROVEEDOR p ON p.ID_PROVEEDOR = SHS.ID_PROVEEDOR" +
+                " JOIN SVT_SERVICIO serv ON " +
+                "  serv.ID_SERVICIO = SHS.ID_SERVICIO" +
+                " JOIN SVC_TIPO_SERVICIO ts ON " +
+                "  ts.ID_TIPO_SERVICIO= serv.ID_TIPO_SERVICIO" +
                 " WHERE SHS.ID_HOJA_SUBROGACION= " + idHojaSubrogacion;
         log.info(consulta);
         String encoded = DatatypeConverter.printBase64Binary(consulta.getBytes());
