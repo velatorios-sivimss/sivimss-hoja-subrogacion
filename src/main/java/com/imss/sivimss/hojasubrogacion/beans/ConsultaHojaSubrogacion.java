@@ -124,7 +124,7 @@ public class ConsultaHojaSubrogacion {
                 "     end as puedeRegistrar" +
                 " ,	(SELECT ts.DES_TIPO_SERVICIO\tfrom SVC_TIPO_SERVICIO ts " +
                 "  where  ts.ID_TIPO_SERVICIO= temp.ID_TIPO_SERVICIO ) as tipoServicio  " +
-                "                   from   " +
+                "                      " +
                 "   from " +
                 "       (" +
                 "    select" +
