@@ -55,6 +55,7 @@ public class ConsultaHojaSubrogacion {
         SelectQueryUtil query = new SelectQueryUtil();
         query.select("SS.REF_SERVICIO AS servicio", "SS.ID_SERVICIO  as idServicio",
                 "SP.REF_PROVEEDOR AS nombreProveedor",
+                "SP.ID_PROVEEDOR AS idProveedor",
                 "IFNULL(CPT.REF_ORIGEN,'') AS origen",
                 "IFNULL(CPT.REF_DESTINO,'') AS destino", "IFNULL(CPT.CAN_TOTAL_KILOMETROS,'') AS totalKilometros")
                 .from("SVC_ORDEN_SERVICIO SOS")
@@ -141,13 +142,13 @@ public class ConsultaHojaSubrogacion {
                 " LEFT JOIN SVC_FINADO SF ON   " +
                 " SF.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO  " +
                 " LEFT JOIN SVC_PERSONA SP ON   " +
-                " SP.ID_PERSONA\t= SF.ID_PERSONA  " +
+                " SP.ID_PERSONA = SF.ID_PERSONA  " +
                 " LEFT JOIN SVC_CARAC_PRESUPUESTO scp ON   " +
-                " scp.ID_ORDEN_SERVICIO = \tSOS.ID_ORDEN_SERVICIO  " +
+                " scp.ID_ORDEN_SERVICIO =  SOS.ID_ORDEN_SERVICIO  " +
                 " LEFT JOIN SVC_DETALLE_CARAC_PRESUP dcp ON   " +
                 " dcp.ID_CARAC_PRESUPUESTO = scp.ID_CARAC_PRESUPUESTO  " +
                 " LEFT JOIN SVT_PROVEEDOR PRO ON   " +
-                " PRO.ID_PROVEEDOR=\tdcp.ID_PROVEEDOR  " +
+                " PRO.ID_PROVEEDOR= dcp.ID_PROVEEDOR  " +
                 " LEFT JOIN SVT_SERVICIO serv ON   " +
                 " serv.ID_SERVICIO = dcp.ID_SERVICIO  " +
                 " LEFT JOIN SVC_TIPO_SERVICIO ts ON   " +
@@ -198,9 +199,9 @@ public class ConsultaHojaSubrogacion {
                 " JOIN SVT_HOJA_SUBROGACION SHS ON   " +
                 " SOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO  " +
                 " LEFT JOIN SVC_PERSONA SP ON   " +
-                " SP.ID_PERSONA\t= SF.ID_PERSONA  " +
+                " SP.ID_PERSONA = SF.ID_PERSONA  " +
                 " JOIN SVT_PROVEEDOR PRO ON   " +
-                " PRO.ID_PROVEEDOR=\tSHS.ID_PROVEEDOR  " +
+                " PRO.ID_PROVEEDOR= SHS.ID_PROVEEDOR  " +
                 " JOIN SVT_SERVICIO serv ON   " +
                 " serv.ID_SERVICIO = SHS.ID_SERVICIO  " +
                 " JOIN SVC_TIPO_SERVICIO ts ON   " +
