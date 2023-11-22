@@ -246,8 +246,8 @@ public class ConsultaHojaSubrogacion {
                 "  p.REF_PROVEEDOR AS proveedor " +
                 " FROM SVC_ORDEN_SERVICIO SOS     " +
                 " JOIN SVT_HOJA_SUBROGACION SHS ON     " +
-                " JOIN SVT_PROVEEDOR p ON p.ID_PROVEEDOR = SHS.ID_PROVEEDOR" +
                 " SOS.ID_ORDEN_SERVICIO = SHS.ID_ORDEN_SERVICIO    " +
+                " JOIN SVT_PROVEEDOR p ON p.ID_PROVEEDOR = SHS.ID_PROVEEDOR" +
                 " WHERE SHS.ID_HOJA_SUBROGACION= " + idHojaSubrogacion;
         log.info(consulta);
         String encoded = DatatypeConverter.printBase64Binary(consulta.getBytes());
