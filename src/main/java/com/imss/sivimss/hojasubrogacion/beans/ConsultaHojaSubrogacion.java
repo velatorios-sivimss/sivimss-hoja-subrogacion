@@ -122,7 +122,7 @@ public class ConsultaHojaSubrogacion {
                 "         when (temp.registrados - temp.serviciosRegistrados) = 0 then 'false'" +
                 "         else 'true'" +
                 "     end as puedeRegistrar" +
-                " ,	temp.REF_SERVICIO as tipoServicio " +
+                " ,	temp.DES_TIPO_SERVICIO as tipoServicio " +
                 "   from " +
                 "       (" +
                 "    select" +
@@ -167,7 +167,7 @@ public class ConsultaHojaSubrogacion {
                 "          sdcp.ID_SERVICIO = ss.ID_SERVICIO" +
                 "    where  ods.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO" +
                 "   group by   ods.ID_ORDEN_SERVICIO) as serviciosRegistrados," +
-                " serv.REF_SERVICIO  " +
+                " ts.DES_TIPO_SERVICIO  " +
                 " from   SVC_ORDEN_SERVICIO SOS" +
                 "    left join SVC_FINADO SF on" +
                 "   SF.ID_ORDEN_SERVICIO = SOS.ID_ORDEN_SERVICIO " +
@@ -181,6 +181,8 @@ public class ConsultaHojaSubrogacion {
                 "    PRO.ID_PROVEEDOR=	dcp.ID_PROVEEDOR " +
                 "     left	join SVT_SERVICIO serv on" +
                 "      serv.ID_SERVICIO = dcp.ID_SERVICIO " +
+                " 	LEFT JOIN SVC_TIPO_SERVICIO ts ON " +
+                " 	ts.ID_TIPO_SERVICIO= ts.ID_TIPO_SERVICIO" +
                 "      left join SVC_CARAC_PRESUP_TRASLADO cpt on" +
                 "   cpt.ID_DETALLE_CARACTERISTICAS 	=	dcp.ID_DETALLE_CARACTERISTICAS " +
                 "     left join SVT_HOJA_SUBROGACION SHS on" +
