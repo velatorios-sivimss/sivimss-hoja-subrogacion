@@ -190,7 +190,7 @@ public class ConsultaHojaSubrogacion {
                 folio +
                 proveedor +
                 fecha +
-                // " group by scp.ID_CARAC_PRESUPUESTO , SHS.ID_HOJA_SUBROGACION " +
+                "  GROUP BY SOS.ID_ORDEN_SERVICIO, SHS.ID_HOJA_SUBROGACION  " +
                 " ) as temp ";
 
         log.info(consulta);
